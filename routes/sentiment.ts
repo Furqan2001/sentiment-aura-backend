@@ -41,6 +41,8 @@ async function analyzeWithGemini(text: string): Promise<SentimentResult> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY not configured");
 
+  const MODEL = "gemini-3.5-flash-lite";
+
   const response: AxiosResponse<GeminiResponse> = await axios.post(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
     {
