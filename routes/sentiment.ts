@@ -34,7 +34,7 @@ sentimentRouter.post(
         details: error.message,
       });
     }
-  }
+  },
 );
 
 async function analyzeWithGemini(text: string): Promise<SentimentResult> {
@@ -42,7 +42,7 @@ async function analyzeWithGemini(text: string): Promise<SentimentResult> {
   if (!apiKey) throw new Error("GEMINI_API_KEY not configured");
 
   const response: AxiosResponse<GeminiResponse> = await axios.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
     {
       contents: [
         {
@@ -54,13 +54,15 @@ async function analyzeWithGemini(text: string): Promise<SentimentResult> {
         },
       ],
       generationConfig: {
-        temperature: 0.3,
         responseMimeType: "application/json",
       },
     },
     {
-      headers: { "Content-Type": "application/json" },
-    }
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey,
+      },
+    },
   );
 
   return JSON.parse(response.data.candidates[0].content.parts[0].text);
